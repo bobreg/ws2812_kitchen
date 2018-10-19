@@ -1,11 +1,10 @@
 #include <VirtualWire.h>
 
-int flag = 1;
-String messadge = "c";
+String messadge = "c";  //стартовый символ для передачи по 433МГц
 char msg[255];
 char incomingByte[255];
 String color;
-int len = 0;
+int len = 0; //длинна сообщения
 
 void setup() {
   Serial.begin(115200);
@@ -23,29 +22,15 @@ void loop() {
 //----------------    
     for(int i = 0; i < 255; i++){
   incomingByte[i] = 0;   //обнуление массива для входных данных, а то при новых данных не всё может удалиться
-  } 
-//---------------- 
-    if (messadge[1] == '1'){  //только двойные кавычки, иначе ардуино не поймёт
-      vkl_ledLine();
-    }else if (messadge[1] == '2'){
-      vikl_ledLine();
-    }
+  }
+   send_433MHz();
   }
 }
 
-void vkl_ledLine(){
+void send_433MHz(){
   messadge.toCharArray(msg, 255);
   Serial.println(msg);
   vw_send((uint8_t *)msg, strlen(msg));// передача
-  vw_wait_tx(); // Ждем пока передача будет окончена
-  delay(200);
-  messadge = "c";
-}
-
-void vikl_ledLine(){
-  messadge.toCharArray(msg, 255);
-  Serial.println(msg);
-  vw_send((uint8_t *)msg, strlen(msg));
   vw_wait_tx(); // Ждем пока передача будет окончена
   delay(200);
   messadge = "c";
